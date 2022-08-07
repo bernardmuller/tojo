@@ -1,20 +1,8 @@
-import {
-	Box,
-	Checkbox,
-	createTheme,
-	FormControl,
-	InputAdornment,
-	OutlinedInput,
-	Stack,
-	TextField,
-	ThemeProvider,
-	Typography,
-} from "@mui/material";
+import { Box, Stack, ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import { MdSearch } from "react-icons/md";
+import { useState } from "react";
 import DetailModal from "../components/DetailModal";
 import Header from "../components/Header";
 import NewTodo from "../components/NewTodo";
@@ -23,8 +11,8 @@ import theme from "../styles/themes";
 
 const queryClient = new QueryClient();
 
+// this is the parent components of the Single page application
 const Home: NextPage = () => {
-	const [showDetail, setShowDetail] = useState(false);
 	const [activeTodo, setActiveTodo] = useState<string | undefined>(undefined);
 
 	return (
@@ -58,7 +46,6 @@ const Home: NextPage = () => {
 							<NewTodo />
 							<TodosList
 								onCheck={(id: string) => {
-									// setShowDetail(true);
 									setActiveTodo(id);
 								}}
 							/>

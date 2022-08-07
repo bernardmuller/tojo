@@ -11,7 +11,7 @@ import {
 	Typography,
 } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import { MdClose, MdDelete } from "react-icons/md";
 import TodoTitle from "./TodoTitle";
@@ -29,6 +29,9 @@ const style = {
 	color: "white",
 	minWidth: 350,
 };
+
+// this is a modal component that displays a task in detail
+// it also enables you to edit the name, difficulty and description of the task
 
 const DetailModal = ({
 	open,

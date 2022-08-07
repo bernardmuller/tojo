@@ -8,6 +8,9 @@ import {
   updateTodo,
 } from './actions';
 
+// This is a list of endpoint "blueprints" that will be passed to the endpoint creator
+// function to create all the CRUD endpoint the client will use to perform actions on the frontend.
+
 const endpoints: Endpoint[] = [
   {
     method: 'post',

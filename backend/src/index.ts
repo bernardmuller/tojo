@@ -1,3 +1,5 @@
+// This is the main entry point for the application
+
 import { createApp } from './http';
 
 const app = createApp();

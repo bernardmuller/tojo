@@ -1,3 +1,5 @@
+// This file is used to catch all errors and exeptions anywhere in the app and send the correct error message and status code back to the user.
+
 import { ErrorRequestHandler } from 'express';
 
 export class NotFoundError extends Error {

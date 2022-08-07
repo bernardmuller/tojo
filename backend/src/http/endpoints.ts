@@ -12,6 +12,8 @@ export type Endpoint = {
 
 const endpoints = [...TodoEndpoints];
 
+// this function is used to generate routes for the endpoints that are setupp in each resources endpoint file.
+
 export const createEndpoint = (router: Router, endpoint: Endpoint) => {
   router[endpoint.method](endpoint.path, endpoint.handler);
 };

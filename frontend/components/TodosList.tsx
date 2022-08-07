@@ -7,7 +7,7 @@ import {
 	Stack,
 	Typography,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { MdSearch } from "react-icons/md";
 import { useQuery } from "@tanstack/react-query";
 import Todo from "./Todo";
@@ -22,13 +22,11 @@ const TodosList = ({ onCheck }: { onCheck: (id: string) => any }) => {
 		return todos;
 	};
 
-	const { isLoading, isError, data, error } = useQuery(
-		["todos"],
-		fetchTodoList
-	);
+	const { isLoading, data } = useQuery(["todos"], fetchTodoList);
 
 	const todos = data || [];
 
+	// this function is used to filter todos based on the input string the user types in the search field
 	const filteredTodos = useMemo(
 		() =>
 			searchTerm !== ""

@@ -2,6 +2,8 @@
 import test from 'ava';
 import { createTodo, deleteTodo, getTodo, getTodos } from './actions';
 
+// below are a few basic tests to make sure that the CRUD actions are working properly
+
 test('getTodos gets todos', async (t) => {
   const todos = await getTodos();
   t.truthy(todos);

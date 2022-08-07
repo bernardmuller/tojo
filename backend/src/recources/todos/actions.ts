@@ -1,3 +1,5 @@
+// This file is a compilation for the main CRUD functions that are used in the app.
+
 import axios from 'axios';
 import { NotFoundError } from '../../http/errors';
 
