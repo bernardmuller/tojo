@@ -6,7 +6,10 @@ const endpoints = [
     method: 'post',
     path: '/todos',
     handler: (req: Request, res: Response) => {
-      const todo = createTodo();
+      const newTodo = {
+        title: req.body.title,
+      };
+      const todo = createTodo(newTodo);
       res.status(200).send(todo);
     },
   },
@@ -32,7 +35,11 @@ const endpoints = [
     path: '/todos/:id',
     handler: async (req: Request, res: Response) => {
       const { id } = req.params;
-      const todos = await updateTodo(id, {});
+      const updateData = {
+        title: req.body?.title,
+        completed: req.body?.completed,
+      };
+      const todos = await updateTodo(id, updateData);
       res.status(200).send(todos);
     },
   },

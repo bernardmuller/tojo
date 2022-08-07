@@ -8,6 +8,7 @@ export const createTodo = (data: { title: string }) => {
       completed: false,
     })
     .then((response) => {
+      console.log(response.data);
       return response.data;
     })
     .catch((error) => {
@@ -35,7 +36,7 @@ export const getTodos = async (params?: { filters?: { id?: string } }) => {
   const todos = await axios
     .get('https://jsonplaceholder.typicode.com/todos')
     .then((response) => {
-      const todos = response.data.slice(0, 10);
+      const todos = response.data;
       return todos;
     })
     .catch((error) => {
@@ -46,9 +47,12 @@ export const getTodos = async (params?: { filters?: { id?: string } }) => {
 };
 
 // convert data from any to type
-export const updateTodo = ({ id, data }: { id: string; data: any }) => {
+export const updateTodo = (
+  id: string,
+  data: { title?: string; completed?: boolean },
+) => {
   const updatedTodo = axios
-    .get(`https://jsonplaceholder.typicode.com/todos/${id}`)
+    .put(`https://jsonplaceholder.typicode.com/todos/${id}`, data)
     .then((response) => {
       const todos = response.data;
       return todos;
