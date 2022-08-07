@@ -25,7 +25,7 @@ const queryClient = new QueryClient();
 
 const Home: NextPage = () => {
 	const [showDetail, setShowDetail] = useState(false);
-	const [activeTodo, setActiveTodo] = useState("0");
+	const [activeTodo, setActiveTodo] = useState<string | undefined>(undefined);
 
 	return (
 		<QueryClientProvider client={queryClient}>
@@ -35,34 +35,33 @@ const Home: NextPage = () => {
 					justifyContent="center"
 					style={{
 						backgroundColor: "#393e46",
-						height: "100%",
+						height: "100vh",
 						overflowY: "scroll",
+						position: "relative",
 					}}
 				>
-					<Stack height="100vh" width="100%" maxWidth="600px">
+					<Header />
+					<Stack height="100%" width="100%" maxWidth="600px">
 						<Head>
 							<link rel="icon" href="/favicon.ico" />
 						</Head>
 
-						{activeTodo !== "0" && (
+						{activeTodo && (
 							<DetailModal
-								onClose={() => setShowDetail(false)}
-								open={showDetail}
+								onClose={() => setActiveTodo(undefined)}
+								open
 								todoId={activeTodo}
 							/>
 						)}
 
-						<Header />
-
-						<Stack px={3} pt="2rem" spacing={1} width="100%">
+						<Stack px={3} pt="4rem" spacing={1} width="100%">
+							<NewTodo />
 							<TodosList
 								onCheck={(id: string) => {
-									setShowDetail(true);
+									// setShowDetail(true);
 									setActiveTodo(id);
 								}}
 							/>
-
-							<NewTodo />
 						</Stack>
 					</Stack>
 				</Box>

@@ -7,4 +7,4 @@ module.exports = {
     'tsconfig-paths/register',
     './src/tests/setup.ts',
   ],
-}
+};

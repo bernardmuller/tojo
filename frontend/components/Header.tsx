@@ -4,11 +4,16 @@ import React from "react";
 const Header = () => {
 	return (
 		<Stack
+			position="fixed"
 			direction="row"
 			justifyContent="center"
 			alignItems="center"
 			height="4rem"
-			width="100%"
+			width={"100%"}
+			zIndex="1"
+			style={{
+				backgroundColor: "#393e46",
+			}}
 		>
 			<Typography
 				fontFamily="Helvetica"

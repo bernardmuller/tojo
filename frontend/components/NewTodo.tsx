@@ -1,6 +1,6 @@
-import { IconButton, Stack, TextField } from "@mui/material";
+import { Alert, AlertTitle, IconButton, Stack, TextField } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import React from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { MdSave } from "react-icons/md";
@@ -9,31 +9,48 @@ const NewTodo = () => {
 	const {
 		register,
 		handleSubmit,
-		watch,
 		formState: { errors },
-	} = useForm();
+	} = useForm<{ title: string }>();
 
-	const mutation = useMutation((newTodo) => {
+	const mutation = useMutation((newTodo: { title: string }) => {
 		return axios.post(`http://localhost:8000/todos`, newTodo);
 	});
 
 	const onSubmit = (data: { title: string }) => {
-		console.log(data);
 		mutation.mutate(data);
 	};
 
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
-			<Stack direction="row" alignItems="center">
-				<TextField
-					id="standard-basic"
-					label="New todo"
-					variant="standard"
-					{...register("title", { required: true })}
-				/>
-				<IconButton type="submit">
-					<MdSave size={25} />
-				</IconButton>
+		<form
+			onSubmit={handleSubmit(onSubmit)}
+			style={{ width: "100%", marginBottom: "0.6rem" }}
+		>
+			<Stack spacing={1} width="100%">
+				<>
+					<Stack
+						direction="row"
+						alignItems="center"
+						width="100%"
+						spacing={2}
+					>
+						<TextField
+							id="standard-basic"
+							label="New todo"
+							variant="standard"
+							{...register("title", { required: true })}
+							style={{ width: "100%" }}
+						/>
+						<IconButton type="submit" color="primary">
+							<MdSave size={25} />
+						</IconButton>
+					</Stack>
+					{mutation.error && (
+						<Alert severity="error">
+							<AlertTitle>Error</AlertTitle>
+							{(mutation.error as any).message}
+						</Alert>
+					)}
+				</>
 			</Stack>
 		</form>
 	);

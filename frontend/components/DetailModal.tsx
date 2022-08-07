@@ -1,6 +1,9 @@
 import {
+	Alert,
+	AlertTitle,
 	Box,
 	Button,
+	IconButton,
 	Modal,
 	Slider,
 	Stack,
@@ -8,8 +11,10 @@ import {
 	Typography,
 } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { MdClose, MdDelete } from "react-icons/md";
+import TodoTitle from "./TodoTitle";
 
 const style = {
 	position: "absolute",
@@ -31,43 +36,28 @@ const DetailModal = ({
 	todoId,
 }: {
 	open: boolean;
-	onClose: () => any;
+	onClose: () => void;
 	todoId: string;
 }) => {
-	const fetchTodo = async () => {
-		if (todoId != "0" && open) {
-			const todo = await fetch(
-				`http://localhost:8000/todos/${todoId}`
-			).then((response) => response.json());
-			return todo;
-		}
-	};
+	const [state, setState] = useState({
+		difficulty: 5,
+		description: "",
+	});
 
-	const completeTodo = async () => {
-		const todo = await fetch(`http://localhost:8000/todos/${todoId}`).then(
-			(response) => response.json()
-		);
+	const fetchTodo = useCallback(async (todoId: string) => {
+		const response = await fetch(`http://localhost:8000/todos/${todoId}`);
+		const todo = await response.json();
 		return todo;
-	};
+	}, []);
 
 	const mutation = useMutation((completedTodo) => {
-		return axios.delete(`http://localhost:8000/todos/${todoId}`);
+		return axios.put(`http://localhost:8000/todos/${todoId}`, state);
 	});
 
 	const { isLoading, isError, data, error, refetch } = useQuery(
-		["todo"],
-		fetchTodo
+		[`todo-${todoId}`],
+		() => fetchTodo(todoId)
 	);
-
-	useEffect(() => {
-		refetch();
-	}, [todoId]);
-
-	const handleComplete = () => {};
-
-	if (isLoading) {
-		return <Typography color="white">Loading..</Typography>;
-	}
 
 	return (
 		<Modal
@@ -77,41 +67,110 @@ const DetailModal = ({
 			aria-describedby="modal-modal-description"
 		>
 			<Box sx={style}>
-				<Typography id="modal-modal-title" variant="h6" component="h2">
-					{data?.title}
-				</Typography>
-				<Typography id="modal-modal-title" variant="h6"></Typography>
-				<Slider
-					aria-label="Temperature"
-					defaultValue={30}
-					valueLabelDisplay="auto"
-					step={10}
-					marks
-					min={10}
-					max={110}
-				/>
-				<Stack width="100%" spacing={1}>
-					<Typography
-						id="modal-modal-description"
-						sx={{ mt: 2, color: "white" }}
-					>
-						Describe how the task went:
-					</Typography>
-					<TextField
-						id="outlined-multiline-description"
-						multiline
-						rows={4}
-						placeholder="Start typing.."
-					/>
-					<Button
-						variant="contained"
-						onClick={() => {
-							mutation.mutate({ completed: true });
-						}}
-					>
-						Complete
-					</Button>
-				</Stack>
+				<>
+					{error && (
+						<Alert severity="error">
+							<AlertTitle>Error</AlertTitle>
+							{(error as any)?.message}
+						</Alert>
+					)}
+					{!error &&
+						(isLoading ? (
+							<Typography color="white">Loading...</Typography>
+						) : (
+							<>
+								<Stack
+									direction="row"
+									spacing={2}
+									justifyContent="space-between"
+									alignItems="center"
+								>
+									<TodoTitle
+										todoId={todoId}
+										title={data?.title}
+									/>
+									<IconButton onClick={onClose}>
+										<MdClose size={30} />
+									</IconButton>
+								</Stack>
+								<Stack mt={2}>
+									<Typography id="modal-modal-title">
+										Task difficulty level:
+									</Typography>
+									<Slider
+										aria-label="Temperature"
+										defaultValue={state.difficulty}
+										valueLabelDisplay="auto"
+										step={1}
+										marks
+										min={0}
+										max={10}
+										onChange={(e, newValue) =>
+											setState((prev) => ({
+												...prev,
+												difficulty: Array.isArray(
+													newValue
+												)
+													? newValue[0]
+													: newValue,
+											}))
+										}
+									/>
+								</Stack>
+								<Stack width="100%" spacing={1}>
+									<>
+										<Typography
+											id="modal-modal-description"
+											sx={{ mt: 2, color: "white" }}
+										>
+											Describe how the task went:
+										</Typography>
+										<TextField
+											id="outlined-multiline-description"
+											multiline
+											rows={4}
+											placeholder="Start typing..."
+											onChange={(e) => {
+												setState((prev) => ({
+													...prev,
+													description: e.target.value,
+												}));
+											}}
+											value={state.description}
+										/>
+										{mutation.error && (
+											<Alert severity="error">
+												<AlertTitle>Error</AlertTitle>
+												{
+													(mutation.error as any)
+														.message
+												}
+											</Alert>
+										)}
+										<Stack
+											direction="row"
+											spacing={1}
+											justifyContent="space-between"
+											pt={2}
+										>
+											<Button
+												variant="contained"
+												onClick={() => {
+													mutation.mutate();
+												}}
+												disabled={data?.completed}
+											>
+												Complete
+											</Button>
+											<IconButton>
+												<MdDelete size={25} />
+											</IconButton>
+										</Stack>
+									</>
+								</Stack>
+							</>
+						))}
+				</>
 			</Box>
 		</Modal>
 	);

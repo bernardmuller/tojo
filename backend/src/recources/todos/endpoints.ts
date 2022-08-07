@@ -1,11 +1,18 @@
 import { Request, Response } from 'express';
-import { createTodo, deleteTodo, getTodos, updateTodo } from './actions';
+import { Endpoint } from 'http/endpoints';
+import {
+  createTodo,
+  deleteTodo,
+  getTodo,
+  getTodos,
+  updateTodo,
+} from './actions';
 
-const endpoints = [
+const endpoints: Endpoint[] = [
   {
     method: 'post',
     path: '/todos',
-    handler: (req: Request, res: Response) => {
+    handler: (req, res) => {
       const newTodo = {
         title: req.body.title,
       };
@@ -16,7 +23,7 @@ const endpoints = [
   {
     method: 'get',
     path: '/todos',
-    handler: async (req: Request, res: Response) => {
+    handler: async (req, res) => {
       const todos = await getTodos();
       res.status(200).send(todos);
     },
@@ -24,16 +31,16 @@ const endpoints = [
   {
     method: 'get',
     path: '/todos/:id',
-    handler: async (req: Request, res: Response) => {
+    handler: async (req, res) => {
       const { id } = req.params;
-      const todo = await getTodos({ filters: { id } });
-      return res.status(200).send(todo);
+      const todo = await getTodo(id);
+      res.status(200).send(todo);
     },
   },
   {
     method: 'put',
     path: '/todos/:id',
-    handler: async (req: Request, res: Response) => {
+    handler: async (req, res) => {
       const { id } = req.params;
       const updateData = {
         title: req.body?.title,
@@ -46,7 +53,7 @@ const endpoints = [
   {
     method: 'delete',
     path: '/todos/:id',
-    handler: async (req: Request, res: Response) => {
+    handler: async (req, res) => {
       const { id } = req.params;
       const todos = await deleteTodo(id);
       res.status(200).send(todos);

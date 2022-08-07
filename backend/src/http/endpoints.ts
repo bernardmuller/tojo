@@ -4,7 +4,7 @@ import TodoEndpoints from '../recources/todos/endpoints';
 
 export const router = Router();
 
-type Endpoint = {
+export type Endpoint = {
   method: 'get' | 'post' | 'put' | 'delete';
   path: string;
   handler: (req: Request, res: Response) => any;
@@ -16,5 +16,5 @@ export const createEndpoint = (router: Router, endpoint: Endpoint) => {
   router[endpoint.method](endpoint.path, endpoint.handler);
 };
 
-export const endpoint = (endpoint: any) => endpoint;
+export const endpoint = (endpoint: Endpoint) => endpoint;
 endpoints.forEach((endpoint) => createEndpoint(router, endpoint));

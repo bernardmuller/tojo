@@ -7,14 +7,12 @@ import {
 	Stack,
 	Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MdSearch } from "react-icons/md";
 import { useQuery } from "@tanstack/react-query";
 import Todo from "./Todo";
 
 const TodosList = ({ onCheck }: { onCheck: (id: string) => any }) => {
-	const [todos, setTodos] = useState([]);
-	const [filteredTodos, setFilteredTodos] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 
 	const fetchTodoList = async () => {
@@ -29,34 +27,25 @@ const TodosList = ({ onCheck }: { onCheck: (id: string) => any }) => {
 		fetchTodoList
 	);
 
-	// if (isError) {
-	// 	return <span>Error: {error.message}</span>;
-	// }
+	const todos = data || [];
 
-	useEffect(() => {
-		setTodos(data);
-		setFilteredTodos(data);
-	}, [data]);
-
-	useEffect(() => {
-		if (searchTerm) {
-			setFilteredTodos(
-				todos.filter(
-					(todo: {
-						id: string;
-						completed: boolean;
-						title: string;
-					}) => {
-						if (todo.title.toUpperCase().includes(searchTerm)) {
-							return todo;
+	const filteredTodos = useMemo(
+		() =>
+			searchTerm !== ""
+				? todos.filter(
+						(todo: {
+							id: string;
+							completed: boolean;
+							title: string;
+						}) => {
+							if (todo.title.toUpperCase().includes(searchTerm)) {
+								return todo;
+							}
 						}
-					}
-				)
-			);
-		} else {
-			setFilteredTodos(todos);
-		}
-	}, [searchTerm]);
+				  )
+				: todos,
+		[searchTerm, todos]
+	);
 
 	return (
 		<>

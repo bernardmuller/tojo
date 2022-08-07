@@ -13,8 +13,8 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
   switch (err) {
     case err instanceof NotFoundError:
-      res.status(401).json({ error: { message: err.message } });
+      res.status(404).json({ error: { message: err.message } });
     default:
-      res.status(401).json({ error: { message: err.message } });
+      res.status(500).json({ error: { message: err.message } });
   }
 };
