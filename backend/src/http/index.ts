@@ -4,6 +4,8 @@ import cors from 'cors';
 import { router } from './endpoints';
 import { errorHandler } from './errors';
 
+// this function is used to set up the express app with most needed services to parse the request body that is sent to the server and deal with Cross Site Request Forgery.
+
 export const createApp = () => {
   const app = express();
 
